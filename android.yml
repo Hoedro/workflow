@@ -1,21 +1,34 @@
-name: Build Android APK
-on: [push, pull_request]
+[app]
+title = GeoProfil AI
+package.name = geoprofil
+package.domain = org.investigacao
+source.dir = .
+source.include_exts = py,png,jpg,kv,atlas,db,txt
+version = 1.0
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+# Dependências (Sincronizadas com o teu requirements.txt)
+requirements = python3, kivy==2.3.0, google-generativeai, pandas, sqlite3, requests, urllib3, charset-normalizer, idna
 
-      - name: Build with Buildozer
-        uses: ArtemSerebriakov/buildozer-action@v1
-        with:
-          buildozer_version: master
-          command: buildozer android debug
-          repository_display_name: GeoProfilAI
+orientation = portrait
+fullscreen = 0
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: package
-          path: bin/*.apk
+# Arquiteturas para telemóveis modernos (64 bits e 32 bits)
+android.archs = arm64-v8a, armeabi-v7a
+
+# Permissões Críticas
+# INTERNET: Para comunicar com a API do Gemini
+# STORAGE: Para guardar a base de dados SQLite localmente
+android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
+android.allow_mixed_runtime = True
+
+# Versões do SDK (Padrão para Android 13+)
+android.api = 33
+android.minapi = 21
+android.ndk = 25b
+
+# (Opcional) Ícone da aplicação
+# icon.filename = %(source.dir)s/icon.png
+
+[buildozer]
+log_level = 2
+warn_on_root = 1
